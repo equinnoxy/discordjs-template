@@ -36,10 +36,8 @@ module.exports = {
 			await command.execute(interaction);
 		} catch (err) {
 			console.error(err);
-			await interaction.reply({
-				content: "There was an issue while executing that command!",
-				ephemeral: true,
-			});
+			const reply = { content: "There was an issue while executing that command!", ephemeral: true };
+			await (interaction.deferred || interaction.replied ? interaction.followUp(reply) : interaction.reply(reply)).catch(() => {});
 		}
 	},
 };

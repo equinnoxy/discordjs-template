@@ -22,7 +22,16 @@ module.exports = {
 	cooldown: 5,
 
 	execute(message, args) {
-		const { commands } = message.client;
+		// Hide commands messageCreate would reject for this user (ownerOnly / permissions).
+		const { owner } = require("./../../config.json");
+		const commands = message.client.commands.filter((c) => {
+			if (c.ownerOnly && message.author.id !== owner) return false;
+			if (c.permissions && message.guild) {
+				const perms = message.channel.permissionsFor(message.author);
+				if (!perms || !perms.has(c.permissions)) return false;
+			}
+			return true;
+		});
 
 		// If there are no args, it means it needs whole help command.
 

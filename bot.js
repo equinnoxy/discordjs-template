@@ -50,13 +50,18 @@ const eventFiles = fs
 // Loop through all files and execute the event when it is actually emmited.
 for (const file of eventFiles) {
 	const event = require(`./events/${file}`);
-	if (event.once) {
-		client.once(event.name, (...args) => event.execute(...args, client));
-	} else {
-		client.on(
-			event.name,
-			async (...args) => await event.execute(...args, client)
+
+	// A rejected promise here (e.g. an interaction whose token already expired) must
+	// never be left unhandled — that crashes the entire bot process.
+	const handler = (...args) =>
+		Promise.resolve(event.execute(...args, client)).catch((err) =>
+			console.error(`Unhandled error in event "${event.name}" (${file}):`, err)
 		);
+
+	if (event.once) {
+		client.once(event.name, handler);
+	} else {
+		client.on(event.name, handler);
 	}
 }
 
@@ -298,3 +303,6 @@ for (const folder of triggerFolders) {
 // Login into your client application with bot's token.
 
 client.login(token);
+
+
+process.on("unhandledRejection", (error) => console.error("[Unhandled Rejection]", error?.message || error));

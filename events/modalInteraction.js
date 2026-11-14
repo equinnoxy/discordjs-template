@@ -24,7 +24,11 @@ module.exports = {
 
 		if (!interaction.isModalSubmit()) return;
 
-		const command = client.modalCommands.get(interaction.customId);
+		// Dynamic customIds (e.g. "redeem:vip") fall back to the handler registered
+		// under the prefix before the first colon.
+		const command =
+			client.modalCommands.get(interaction.customId) ||
+			client.modalCommands.get(interaction.customId.split(":")[0]);
 
 		// If the interaction is not a command in cache, return error message.
 		// You can modify the error message at ./messages/defaultModalError.js file!
