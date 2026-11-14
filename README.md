@@ -12,6 +12,15 @@
   </a>
 </p>
 
+> [!NOTE]
+> This repository is a modified clone of [NamVr/DiscordBot-Template](https://github.com/NamVr/DiscordBot-Template) by Naman Vrati, licensed under the [Apache License 2.0](LICENSE). It adds bug fixes on top of the original:
+>
+> - Event handlers no longer crash the bot process on rejected promises (plus a global `unhandledRejection` handler).
+> - Button, modal and select menu `customId`s like `name:arg` fall back to the handler registered as `name`.
+> - Unregistered buttons are left alone so local component collectors can handle them.
+> - Error replies use `followUp` when the interaction was already deferred or replied.
+> - The prefix `help` command hides commands the user cannot run.
+
 > An **open source** `discord.js` bot template which is based on official [discord.js guide](https://discordjs.guide/) to get started on making your very personal discord bot!
 
 ### 🏠 [Homepage](https://github.com/NamVr/DiscordBot-Template#readme)
